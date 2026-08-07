@@ -1,16 +1,18 @@
 use crate::domain::{pair::Pair, rate::Rate};
 use std::collections::HashMap;
-use std::sync::{Arc, RwLock};
+use std::sync::{Arc};
+use tokio::sync::{RwLock};
 
-#[derive(Clone)]
 pub struct Snapshot {
-    rates: Arc<RwLock<HashMap<Pair, Rate>>>,
+    rates: HashMap<Pair, Rate>,
 }
+
+pub type SharedSnapshot = Arc<RwLock<Snapshot>>;
 
 impl Snapshot {
     pub fn new() -> Self {
         Self {
-            rates: Arc::new(RwLock::new(HashMap::new())),
+            rates: HashMap::new(),
         }
     }
     pub fn replace(&self, rates: Vec<Rate>) {}
