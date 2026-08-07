@@ -965,6 +965,7 @@ dependencies = [
 name = "rate-core"
 version = "0.1.0"
 dependencies = [
+ "rand 0.10.2",
  "reqwest",
  "rust_decimal",
  "thiserror",
