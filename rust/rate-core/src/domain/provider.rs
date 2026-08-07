@@ -1,7 +1,7 @@
 use super::rate::Rate;
 
 pub trait Provider {
-    async fn fetch(&self) -> std::io::Result<Vec<Rate>>;
+    async fn fetch(&self) -> std::result::Result<Vec<Rate>, ProviderError>;
 }
 
 #[derive(Debug, thiserror::Error)]
