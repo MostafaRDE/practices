@@ -12,7 +12,7 @@ use tokio::sync::RwLock;
 async fn main() {
     let snapshot: SharedSnapshot = Arc::new(RwLock::new(Snapshot::new()));
 
-    let mut updater = Updater::new(
+    let updater = Updater::new(
         MockProvider {},
         snapshot.clone(),
     );
