@@ -15,5 +15,9 @@ impl Snapshot {
             rates: HashMap::new(),
         }
     }
-    pub fn replace(&self, rates: Vec<Rate>) {}
+    pub fn replace(&mut self, rates: Vec<Rate>) {
+        for rate in rates {
+            self.rates.insert(rate.pair, rate);
+        }
+    }
 }

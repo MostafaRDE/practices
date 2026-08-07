@@ -13,17 +13,17 @@ impl<P: Provider> Updater<P> {
         }
     }
 
-    pub async fn run(&self) {
+    pub async fn run(&mut self) {
         loop {
             self.update_once().await;
             tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
         }
     }
 
-    pub async fn update_once(&self) {
+    pub async fn update_once(&mut self) {
         match self.provider.fetch().await {
             Ok(data) => {
-                let snapshot = self.snapshot.write().await;
+                let snapshot = &mut self.snapshot.write().await;
                 snapshot.replace(data)
             },
             Err(_) => todo!(),
