@@ -87,6 +87,29 @@ mod tests {
     }
 
     #[test]
+    fn get_should_return_existing_rate() {
+        let mut snapshot = Snapshot::new();
+
+        let pair = Pair { base: Currency::USD, quote: Currency::IRR };
+        snapshot.upsert(vec![ Rate {
+            pair,
+            buy: Decimal::new(170_000_0, 0),
+            sell: Decimal::new(178_000_0, 0),
+            updated_at: SystemTime::now(),
+        } ]);
+
+        let result = snapshot.get(&pair);
+        assert!(result.is_some());
+    }
+
+    #[test]
+    fn get_should_return_none_for_unknown_pair() {
+        let snapshot = Snapshot::new();
+        let result = snapshot.get(&Pair { base: Currency::USD, quote: Currency::IRR });
+        assert!(result.is_none());
+    }
+
+    #[test]
     fn upsert_should_not_remove_old_rates() {
         let mut snapshot = Snapshot::new();
 
