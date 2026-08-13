@@ -2,17 +2,25 @@ use crate::state::snapshot::SharedSnapshot;
 use axum::{Json, extract::State};
 use serde::Serialize;
 
+#[utoipa::path(
+    get,
+    path = "/health",
+    tag = "rates",
+    responses(
+        (status = 200, description = "Service is healthy"),
+    ),
+)]
 pub async fn health() -> &'static str {
     "OK"
 }
 
 
-#[derive(Serialize)]
+#[derive(Serialize, utoipa::ToSchema)]
 pub struct RatesResponse {
     pub rates: Vec<RateResponse>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, utoipa::ToSchema)]
 pub struct RateResponse {
     pub base: String,
     pub quote: String,
@@ -20,6 +28,18 @@ pub struct RateResponse {
     pub sell: String,
 }
 
+#[utoipa::path(
+    get,
+    path = "/rates",
+    tag = "rates",
+    responses(
+        (
+            status = 200,
+            description = "Current currency rates",
+            body = RatesResponse
+        )
+    )
+)]
 pub async fn get_rates(
     State(snapshot): State<SharedSnapshot>,
 ) -> Json<RatesResponse> {
