@@ -20,6 +20,10 @@ impl Snapshot {
         self.rates.is_empty()
     }
 
+    pub fn all(&self) -> Vec<Rate> {
+        self.rates.values().copied().collect()
+    }
+
     pub fn get(&self, pair: &Pair) -> Option<&Rate> {
         self.rates.get(pair)
     }

@@ -23,7 +23,7 @@ async fn main() {
         updater.run().await;
     });
 
-    let app = http::routes::router();
+    let app = http::routes::router(snapshot);
     let listener = TcpListener::bind("0.0.0.0:3000").await.unwrap();
     println!("App run on: http://0.0.0.0:3000");
     axum::serve(listener, app).await.unwrap();
