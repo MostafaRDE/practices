@@ -85,4 +85,39 @@ mod tests {
         assert_eq!(result.buy, Decimal::new(1700000, 0));
         assert_eq!(result.sell, Decimal::new(1780000, 0));
     }
+
+    #[test]
+    fn replace_should_remove_old_rates() {
+        let mut snapshot = Snapshot::new();
+
+        let usd_irr_pair = Pair { base: Currency::USD, quote: Currency::IRR };
+        let eur_irr_pair = Pair { base: Currency::EUR, quote: Currency::IRR };
+        let btc_irr_pair = Pair { base: Currency::BTC, quote: Currency::IRR };
+
+        let usd_irr_rate = Rate {
+            pair: usd_irr_pair,
+            buy: Decimal::new(170_000_0, 0),
+            sell: Decimal::new(178_000_0, 0),
+            updated_at: SystemTime::now(),
+        };
+        let eur_irr_rate = Rate {
+            pair: eur_irr_pair,
+            buy: Decimal::new(210_000_0, 0),
+            sell: Decimal::new(232_000_0, 0),
+            updated_at: SystemTime::now(),
+        };
+        let btc_irr_rate = Rate {
+            pair: btc_irr_pair,
+            buy: Decimal::new(1_678_000_000_0, 0),
+            sell: Decimal::new(1_801_000_000_0, 0),
+            updated_at: SystemTime::now(),
+        };
+
+        snapshot.replace(vec![usd_irr_rate, eur_irr_rate]);
+        snapshot.replace(vec![usd_irr_rate, btc_irr_rate]);
+
+        assert!(snapshot.get(&usd_irr_pair).is_some());
+        assert!(snapshot.get(&eur_irr_pair).is_some());
+        assert!(snapshot.get(&btc_irr_pair).is_some());
+    }
 }
