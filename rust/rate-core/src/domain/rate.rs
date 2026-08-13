@@ -1,4 +1,4 @@
-use crate::domain::pair::Pair;
+use super::pair::Pair;
 use rust_decimal::Decimal;
 use std::time::SystemTime;
 
