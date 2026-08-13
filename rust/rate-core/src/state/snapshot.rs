@@ -1,10 +1,7 @@
-use crate::domain::currency::Currency;
 use crate::domain::{pair::Pair, rate::Rate};
 use std::collections::HashMap;
-use std::sync::{Arc};
-use std::time::SystemTime;
-use rust_decimal::Decimal;
-use tokio::sync::{RwLock};
+use std::sync::Arc;
+use tokio::sync::RwLock;
 
 pub struct Snapshot {
     rates: HashMap<Pair, Rate>,
@@ -19,12 +16,6 @@ impl Snapshot {
         }
     }
 
-    pub fn replace(&mut self, rates: Vec<Rate>) {
-        for rate in rates {
-            self.rates.insert(rate.pair, rate);
-        }
-    }
-
     pub fn is_empty(&self) -> bool {
         self.rates.is_empty()
     }
@@ -32,29 +23,66 @@ impl Snapshot {
     pub fn get(&self, pair: &Pair) -> Option<&Rate> {
         self.rates.get(pair)
     }
+
+    pub fn replace(&mut self, rates: Vec<Rate>) {
+        for rate in rates {
+            self.rates.insert(rate.pair, rate);
+        }
+    }
 }
 
-#[test]
-fn new_snapshot_shout_be_empty() {
-    let snapshot = Snapshot::new();
-    assert!(snapshot.is_empty());
+#[cfg(test)]
+mod tests {
+    use crate::domain::currency::Currency;
+    use rust_decimal::Decimal;
+    use std::time::SystemTime;
+    use super::*;
+
+    #[test]
+    fn new_snapshot_shout_be_empty() {
+        let snapshot = Snapshot::new();
+        assert!(snapshot.is_empty());
+    }
+
+    #[test]
+    fn replace_should_store_rates() {
+        let mut snapshot = Snapshot::new();
+
+        let pair = Pair {
+            base: Currency::USD,
+            quote: Currency::IRR,
+        };
+        let rate = Rate {
+            pair,
+            buy: Decimal::new(1700000, 0),
+            sell: Decimal::new(1780000, 0),
+            updated_at: SystemTime::now(),
+        };
+        snapshot.replace(vec![rate]);
+        assert!(!snapshot.is_empty());
+
+        let result = snapshot.get(&pair);
+        assert!(result.is_some());
+    }
+
+    #[test]
+    fn replace_should_store_rate_values() {
+        let mut snapshot = Snapshot::new();
+
+        let pair = Pair {
+            base: Currency::USD,
+            quote: Currency::IRR,
+        };
+        let rate = Rate {
+            pair,
+            buy: Decimal::new(1700000, 0),
+            sell: Decimal::new(1780000, 0),
+            updated_at: SystemTime::now(),
+        };
+        snapshot.replace(vec![rate]);
+
+        let result = snapshot.get(&pair).unwrap();
+        assert_eq!(result.buy, Decimal::new(1700000, 0));
+        assert_eq!(result.sell, Decimal::new(1780000, 0));
+    }
 }
-
-#[test]
-fn replace_should_store_rates() {
-    let mut snapshot = Snapshot::new();
-
-    let pair = Pair { base: Currency::USD, quote: Currency::IRR };
-    let rate = Rate {
-        pair,
-        buy: Decimal::new(1700000, 0),
-        sell: Decimal::new(1780000, 0),
-        updated_at: SystemTime::now(),
-    };
-    snapshot.replace(vec![rate]);
-    assert!(!snapshot.is_empty());
-
-    let result = snapshot.get(&pair);
-    assert!(result.is_some());
-}
-
