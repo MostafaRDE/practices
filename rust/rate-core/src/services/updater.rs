@@ -24,7 +24,7 @@ impl<P: Provider> Updater<P> {
         match self.provider.fetch().await {
             Ok(data) => {
                 let mut snapshot = self.snapshot.write().await;
-                snapshot.replace(data)
+                snapshot.upsert(data)
             },
             Err(_) => todo!(),
         };

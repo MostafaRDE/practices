@@ -24,7 +24,7 @@ impl Snapshot {
         self.rates.get(pair)
     }
 
-    pub fn replace(&mut self, rates: Vec<Rate>) {
+    pub fn upsert(&mut self, rates: Vec<Rate>) {
         for rate in rates {
             self.rates.insert(rate.pair, rate);
         }
@@ -45,7 +45,7 @@ mod tests {
     }
 
     #[test]
-    fn replace_should_store_rates() {
+    fn upsert_should_store_rates() {
         let mut snapshot = Snapshot::new();
 
         let pair = Pair {
@@ -58,7 +58,7 @@ mod tests {
             sell: Decimal::new(1780000, 0),
             updated_at: SystemTime::now(),
         };
-        snapshot.replace(vec![rate]);
+        snapshot.upsert(vec![rate]);
         assert!(!snapshot.is_empty());
 
         let result = snapshot.get(&pair);
@@ -66,7 +66,7 @@ mod tests {
     }
 
     #[test]
-    fn replace_should_store_rate_values() {
+    fn upsert_should_store_rate_values() {
         let mut snapshot = Snapshot::new();
 
         let pair = Pair {
@@ -79,7 +79,7 @@ mod tests {
             sell: Decimal::new(1780000, 0),
             updated_at: SystemTime::now(),
         };
-        snapshot.replace(vec![rate]);
+        snapshot.upsert(vec![rate]);
 
         let result = snapshot.get(&pair).unwrap();
         assert_eq!(result.buy, Decimal::new(1700000, 0));
@@ -87,7 +87,7 @@ mod tests {
     }
 
     #[test]
-    fn replace_should_remove_old_rates() {
+    fn upsert_should_not_remove_old_rates() {
         let mut snapshot = Snapshot::new();
 
         let usd_irr_pair = Pair { base: Currency::USD, quote: Currency::IRR };
@@ -113,8 +113,8 @@ mod tests {
             updated_at: SystemTime::now(),
         };
 
-        snapshot.replace(vec![usd_irr_rate, eur_irr_rate]);
-        snapshot.replace(vec![usd_irr_rate, btc_irr_rate]);
+        snapshot.upsert(vec![usd_irr_rate, eur_irr_rate]);
+        snapshot.upsert(vec![usd_irr_rate, btc_irr_rate]);
 
         assert!(snapshot.get(&usd_irr_pair).is_some());
         assert!(snapshot.get(&eur_irr_pair).is_some());
