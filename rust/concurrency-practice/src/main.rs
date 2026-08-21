@@ -5,6 +5,7 @@ mod mpsc;
 mod oneshot;
 mod broadcast;
 mod watch;
+mod join_handle;
 
 #[tokio::main]
 async fn main() {
@@ -34,5 +35,9 @@ async fn main() {
 
     println!("Run Watch file:");
     watch::run().await;
+    println!("\n\n");
+
+    println!("Run JoinHandle file:");
+    join_handle::run().await;
     println!("\n\n");
 }
