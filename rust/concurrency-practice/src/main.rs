@@ -2,6 +2,7 @@ mod arc;
 mod mutex;
 mod rwlock;
 mod mpsc;
+mod oneshot;
 
 #[tokio::main]
 async fn main() {
@@ -19,5 +20,9 @@ async fn main() {
 
     println!("Run MPSC file:");
     mpsc::run().await;
+    println!("\n\n");
+
+    println!("Run Oneshot file:");
+    oneshot::run().await;
     println!("\n\n");
 }
