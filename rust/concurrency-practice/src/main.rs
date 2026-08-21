@@ -3,6 +3,7 @@ mod mutex;
 mod rwlock;
 mod mpsc;
 mod oneshot;
+mod broadcast;
 
 #[tokio::main]
 async fn main() {
@@ -24,5 +25,9 @@ async fn main() {
 
     println!("Run Oneshot file:");
     oneshot::run().await;
+    println!("\n\n");
+
+    println!("Run Broadcast file:");
+    broadcast::run().await;
     println!("\n\n");
 }
