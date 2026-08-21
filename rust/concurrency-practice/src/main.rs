@@ -4,6 +4,7 @@ mod rwlock;
 mod mpsc;
 mod oneshot;
 mod broadcast;
+mod watch;
 
 #[tokio::main]
 async fn main() {
@@ -29,5 +30,9 @@ async fn main() {
 
     println!("Run Broadcast file:");
     broadcast::run().await;
+    println!("\n\n");
+
+    println!("Run Watch file:");
+    watch::run().await;
     println!("\n\n");
 }
