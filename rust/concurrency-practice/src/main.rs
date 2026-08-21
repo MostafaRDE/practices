@@ -6,6 +6,7 @@ mod oneshot;
 mod broadcast;
 mod watch;
 mod join_handle;
+mod select;
 
 #[tokio::main]
 async fn main() {
@@ -39,5 +40,9 @@ async fn main() {
 
     println!("Run JoinHandle file:");
     join_handle::run().await;
+    println!("\n\n");
+
+    println!("Run Select file:");
+    select::run().await;
     println!("\n\n");
 }
