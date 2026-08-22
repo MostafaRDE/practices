@@ -7,6 +7,7 @@ mod broadcast;
 mod watch;
 mod join_handle;
 mod select;
+mod cancellation;
 
 #[tokio::main]
 async fn main() {
@@ -44,5 +45,9 @@ async fn main() {
 
     println!("Run Select file:");
     select::run().await;
+    println!("\n\n");
+
+    println!("Run Cancellation file:");
+    cancellation::run().await;
     println!("\n\n");
 }
